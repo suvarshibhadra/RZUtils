@@ -36,6 +36,13 @@
             (constraint.firstItem == self.superview && constraint.secondItem == self));
 }
 
+- (BOOL)rz_constraintIsWithSiblingView:(NSLayoutConstraint *)constraint
+{
+    return [constraint.firstItem isKindOfClass:[UIView class]]
+            && [constraint.secondItem isKindOfClass:[UIView class]]
+            && [((UIView *)constraint.firstItem).superview isEqual:((UIView *)constraint.secondItem).superview];
+}
+
 - (NSLayoutConstraint *)rz_pinnedWidthConstraint
 {
     __block NSLayoutConstraint *constraint = nil;
@@ -164,6 +171,40 @@
     [[[self superview] constraints] enumerateObjectsUsingBlock:^(NSLayoutConstraint *c, NSUInteger idx, BOOL *stop) {
         if ((c.firstItem == self && c.firstAttribute == NSLayoutAttributeCenterY) ||
             (c.secondItem == self && c.secondAttribute == NSLayoutAttributeCenterY))
+        {
+            constraint = c;
+            *stop = YES;
+        }
+    }];
+    return constraint;
+}
+
+- (NSLayoutConstraint *)rz_pinnedLeadingConstraint
+{
+    if (self.superview == nil) return nil;
+    
+    __block NSLayoutConstraint *constraint = nil;
+    [[[self superview] constraints] enumerateObjectsUsingBlock:^(NSLayoutConstraint *c, NSUInteger idx, BOOL *stop) {
+        BOOL constraintIsWithSiblingView = [self rz_constraintIsWithSiblingView:c];
+        BOOL constraintIsDesiredType = (c.firstItem == self && c.firstAttribute == NSLayoutAttributeLeading) || (c.secondItem == self && c.secondAttribute == NSLayoutAttributeLeading);
+        if (constraintIsWithSiblingView && constraintIsDesiredType)
+        {
+            constraint = c;
+            *stop = YES;
+        }
+    }];
+    return constraint;
+}
+
+- (NSLayoutConstraint *)rz_pinnedTrailingConstraint
+{
+    if (self.superview == nil) return nil;
+    
+    __block NSLayoutConstraint *constraint = nil;
+    [[[self superview] constraints] enumerateObjectsUsingBlock:^(NSLayoutConstraint *c, NSUInteger idx, BOOL *stop) {
+        BOOL constraintIsWithSiblingView = [self rz_constraintIsWithSiblingView:c];
+        BOOL constraintIsDesiredType = (c.firstItem == self && c.firstAttribute == NSLayoutAttributeTrailing) || (c.secondItem == self && c.secondAttribute == NSLayoutAttributeTrailing);
+        if (constraintIsWithSiblingView && constraintIsDesiredType)
         {
             constraint = c;
             *stop = YES;

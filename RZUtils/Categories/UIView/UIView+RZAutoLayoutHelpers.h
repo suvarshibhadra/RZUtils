@@ -46,6 +46,9 @@
 - (NSLayoutConstraint*)rz_pinnedRightConstraint;
 - (NSLayoutConstraint*)rz_pinnedBottomConstraint;
 
+- (NSLayoutConstraint *)rz_pinnedLeadingConstraint;
+- (NSLayoutConstraint *)rz_pinnedTrailingConstraint;
+
 - (NSLayoutConstraint*)rz_pinnedCenterXConstraint;
 - (NSLayoutConstraint*)rz_pinnedCenterYConstraint;
 
